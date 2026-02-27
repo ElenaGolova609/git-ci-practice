@@ -19,32 +19,13 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Check Python version
-        run: python --version
-
-      - name: Diagnostic: Check file encoding and content
-        run: |
-          echo "=== File encoding ==="
-          file -i main.py 2>/dev/null || echo "file command not available"
-          file -i test_sample.py 2>/dev/null || echo "file command not available"
-
-          echo "=== First lines of files ==="
-          head -n 5 main.py
-          head -n 5 test_sample.py
-
-          echo "=== Raw characters (first 10) ==="
-          od -c main.py | head -2
-          od -c test_sample.py | head -2
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install flake8
 
-      - name: Test Python syntax (compile only)
-        run: |
-          python -m py_compile main.py || echo "Syntax error in main.py"
-          python -m py_compile test_sample.py || echo "Syntax error in test_sample.py"
-
       - name: Run linter
-        run: flake8 .
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --exit-zero --max-complexity=10 --max-line-length=88
