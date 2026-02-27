@@ -1,5 +1,4 @@
 def greet(name):
-return f"Hello, {name}!"  # Нет отступа — вызовет IndentationError
+    return f'Hello, {name}!"  # Одинарная открывающая, двойная закрывающая
 
-
-print(greet("World))
+print(greet("World"))
